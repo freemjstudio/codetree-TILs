@@ -12,16 +12,16 @@ for i in range(n): # 가로
     for j in range(n-1):
         if arr[i][j] == arr[i][j+1]:
             count += 1
-        if count >= m:
-            answer += 1
+    if count >= m:
+        answer += 1
 
 for i in range(n):
-    count = 0 
+    count = 1 
     for j in range(n-1):
         if arr[j][i] == arr[j+1][i]:
             count += 1
-        if count >= m:
-            answer += 1
+    if count >= m:
+        answer += 1
     
 
 print(answer)
