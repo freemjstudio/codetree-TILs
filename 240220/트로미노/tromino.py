@@ -47,7 +47,7 @@ def solve(x, y):
                     flag = False 
         if flag: 
             max_total = max(temp_total, max_total)
-        return max_total
+    return max_total
 
 
 # 3*1 block 
