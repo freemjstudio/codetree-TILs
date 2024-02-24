@@ -51,4 +51,4 @@ for _ in range(k):
     r, c = bfs(r, c) # 새로운 위치로 갱신 
 
 # k 번 반복 후 갱신된 위치 
-print(r, c)
+print(r+1, c+1)
