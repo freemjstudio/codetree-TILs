@@ -6,7 +6,7 @@ answer = 0
 
 for _ in range(n):
     grid.append(list(map(int, input().split())))
-#print(grid)
+
 visited = [[False] * m for _ in range(n)]
 
 queue = deque() 
@@ -27,7 +27,7 @@ def bfs(sx, sy):
         for dx, dy in zip(dxs, dys):
             nx, ny = x + dx, y + dy
 
-            if is_in_range(nx, ny) and grid[nx][ny] == 1:
+            if is_in_range(nx, ny) and grid[nx][ny] == 1 and not visited[nx][ny]:
                 visited[nx][ny] = True 
                 queue.append((nx, ny))
 
