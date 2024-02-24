@@ -28,14 +28,14 @@ def bfs(sx, sy):
 
         for dx, dy in zip(dxs, dys):
             nx, ny = x + dx, y + dy 
-            if 0 <= nx < n and 0 <= ny < n and (not visited[nx][ny]) and grid[nx][ny] <= start_num:
+            if 0 <= nx < n and 0 <= ny < n and (not visited[nx][ny]) and grid[nx][ny] < start_num:
                 new_num = grid[nx][ny]
                 visited[nx][ny] = True 
 
-                if start_num != new_num and new_num > max_value:
+                if new_num > max_value:
                     ex, ey = nx, ny 
                     max_value = new_num
-                elif start_num != new_num and new_num == max_value:
+                elif new_num == max_value:
                     if nx < ex: # 행 번호가 작은 곳으로 이동하기 
                         ex, ey = nx, ny 
                     elif nx == ex: 
@@ -47,8 +47,14 @@ def bfs(sx, sy):
     return ex, ey 
 
 r, c = r-1, c-1
+
 for _ in range(k):
-    r, c = bfs(r, c) # 새로운 위치로 갱신 
+    nr, nc = bfs(r, c) # 새로운 위치로 갱신 
+    if r == nr and c == nc:
+        break 
+    else: 
+        r, c = nr, nc
+
 
 # k 번 반복 후 갱신된 위치 
 print(r+1, c+1)
