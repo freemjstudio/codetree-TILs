@@ -13,6 +13,8 @@ dxs = [1, -1, 0, 0]
 dys = [0, 0, 1, -1]
 
 def bfs(sx, sy):
+    # print(sx, sy)
+    # print("now value :", grid[sx][sy])
     ex, ey = sx, sy 
     visited = [[False] * n for _ in range(n)]
     queue = deque()
@@ -26,17 +28,22 @@ def bfs(sx, sy):
 
         for dx, dy in zip(dxs, dys):
             nx, ny = x + dx, y + dy 
-            if 0 <= nx < n and 0 <= ny < n and not visited[nx][ny] and grid[nx][ny] <= start_num:
+            if 0 <= nx < n and 0 <= ny < n and (not visited[nx][ny]) and grid[nx][ny] <= start_num:
                 new_num = grid[nx][ny]
-                if new_num > max_value:
+                visited[nx][ny] = True 
+
+                if start_num != new_num and new_num > max_value:
                     ex, ey = nx, ny 
                     max_value = new_num
-                elif new_num == max_value:
+                elif start_num != new_num and new_num == max_value:
                     if nx < ex: # 행 번호가 작은 곳으로 이동하기 
                         ex, ey = nx, ny 
                     elif nx == ex: 
                         if ny < ey:
                             ex, ey = nx, ny
+                           
+                queue.append((nx, ny))
+    
     return ex, ey 
 
 r, c = r-1, c-1
