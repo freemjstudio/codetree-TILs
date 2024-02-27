@@ -4,8 +4,6 @@ grid = []
 for _ in range(n):
     grid.append(list(map(int, input().split())))
 
-# block 삽입하기 
-k = k-1 
 
 def check_block(row, start, end):
     for col in range(start, end):
@@ -15,11 +13,12 @@ def check_block(row, start, end):
 
 def get_row():
     for row in range(n-1):
-        if not check_block(row + 1, k, k+m-1):
+        if not check_block(row + 1, k, k+m):
             return row 
 
     return n - 1 # 최댓값 
 
+k -= 1
 max_row = get_row()
 
 # 최종 block 위치 표시하기 
