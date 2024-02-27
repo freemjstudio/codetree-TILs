@@ -27,6 +27,7 @@ while True:
                 flag = False 
         else: 
             flag = False 
+
     if not flag:
         break 
     
@@ -41,4 +42,6 @@ while True:
 
 # 3. answer 
 for i in range(n):
-    print(*grid[i])
+    for j in range(n):
+        print(grid[i][j], end=" ")
+    print()
