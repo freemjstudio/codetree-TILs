@@ -2,7 +2,6 @@ n, m, k = map(int, input().split())
 # block -> 1, empty -> 0 
 
 grid = []
-
 for _ in range(n):
     grid.append(list(map(int, input().split())))
 
@@ -17,17 +16,20 @@ for i in range(m):
 
 # 2. block 객체 이동시키기 
 while True:
-    # check 
     flag = True 
     new_block_pos = []
     for x, y in block_pos:
         nx, ny = x+1, y 
-        if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] == 0: 
-            new_block_pos.append((nx, ny))
+        if 0 <= nx < n and 0 <= ny < n:
+            if grid[nx][ny] == 0: 
+                new_block_pos.append((nx, ny))
+            else:
+                flag = False 
         else: 
             flag = False 
     if not flag:
         break 
+    
     # remove prev position 
     for x, y in block_pos:
         grid[x][y] = 0
