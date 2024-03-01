@@ -21,14 +21,12 @@ def is_in_range(i, j):
 def is_wall(i, j):
     return is_in_range(i, j) and grid[i][j] == '#'
 
-cur_x, cur_y = x-1, y-1
-
 def simulate():
     global cur_x, cur_y, answer, dir_idx, dx, dy
 
-    if not visited[cur_x][cur_y][dir_idx]:
+    if visited[cur_x][cur_y][dir_idx]:
         answer = -1
-        return
+        sys.exit(0)
 
     visited[cur_x][cur_y][dir_idx] = True 
     nx, ny = cur_x + dx[dir_idx], cur_y + dy[dir_idx]
@@ -51,6 +49,7 @@ def simulate():
             dir_idx = (dir_idx+1) % 4 
             answer += 2
 
+cur_x, cur_y = x-1, y-1
 
 while is_in_range(cur_x, cur_y):
     simulate()
