@@ -39,7 +39,7 @@ def simulate():
         sys.exit(0)
     else: 
         # 오른쪽 칸 확인 
-        right_dir = (dir_idx+3) % 4 
+        right_dir = (dir_idx+1) % 4 
         rx, ry = nx + dx[right_dir], ny + dy[right_dir]
 
         if is_wall(rx, ry):
