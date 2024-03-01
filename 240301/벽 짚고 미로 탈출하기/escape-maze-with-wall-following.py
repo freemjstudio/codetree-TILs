@@ -26,6 +26,7 @@ def simulate():
 
     if visited[cur_x][cur_y][dir_idx]:
         answer = -1
+        print(answer)
         sys.exit(0)
 
     visited[cur_x][cur_y][dir_idx] = True 
