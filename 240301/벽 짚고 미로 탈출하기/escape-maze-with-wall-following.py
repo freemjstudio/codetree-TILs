@@ -47,8 +47,9 @@ def simulate():
             answer += 1
         else: 
             # 한 칸 이동 + 90도 회전 + 한 칸 이동 
-            cur_x, cur_y = rx, ry 
+            cur_x, cur_y = nx, ny 
             dir_idx = (dir_idx+1) % 4 
+            cur_x, cur_y = cur_x + dx[dir_idx], cur_y + dy[dir_idx]
             answer += 2
 
 cur_x, cur_y = x-1, y-1
