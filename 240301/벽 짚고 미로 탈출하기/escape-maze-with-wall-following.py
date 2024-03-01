@@ -35,6 +35,8 @@ def simulate():
     elif not is_in_range(nx, ny): # step2 - case 1 - 탈출 
         answer += 1
         cur_x, cur_y = nx, ny 
+        print(answer)
+        sys.exit(0)
     else: 
         # 오른쪽 칸 확인 
         right_dir = (dir_idx+3) % 4 
