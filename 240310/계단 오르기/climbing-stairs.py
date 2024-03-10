@@ -1,8 +1,8 @@
 n = int(input())
 MAX = 1000
 dp = [0] * (MAX+1)
-dp[0] = 1
-dp[1] = 1
+dp[0] = 0
+dp[1] = 0
 dp[2] = 1
 dp[3] = 1
 if n > 3:
