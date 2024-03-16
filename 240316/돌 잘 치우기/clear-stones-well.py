@@ -46,6 +46,6 @@ if m > 0:
             answer = max(bfs(sx, sy, list(comb)), answer)
 else: 
     for sx, sy in start_pos:
-        answer = max(bfs(sx, sy, list(comb)), answer)
+        answer = max(bfs(sx, sy, []), answer)
 
 print(answer)
