@@ -18,13 +18,13 @@ for _ in range(k):
     r, c = map(int, input().split())
     start_pos.append((r, c))
 
-remove_rock_comb = list(combinations(rocks, m))
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
 def bfs(sx, sy, comb):
     queue = deque([(sx, sy)])
     visited = [[0] * n for _ in range(n)]
-    dx = [-1, 1, 0, 0]
-    dy = [0, 0, -1, 1]
+    
     count = 0 # enqueue 할 떄 count 
     while queue: 
         x, y = queue.popleft()
@@ -39,10 +39,13 @@ def bfs(sx, sy, comb):
     return count 
 
 answer = 0 # max
-for comb in remove_rock_comb:
-
+if m > 0:
+    remove_rock_comb = list(combinations(rocks, m))
+    for comb in remove_rock_comb:
+        for sx, sy in start_pos:
+            answer = max(bfs(sx, sy, list(comb)), answer)
+else: 
     for sx, sy in start_pos:
         answer = max(bfs(sx, sy, list(comb)), answer)
-
 
 print(answer)
