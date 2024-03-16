@@ -1,6 +1,7 @@
 from itertools import combinations
 from collections import deque 
-
+import sys 
+input = sys.stdin.readline
 n, k, m = map(int, input().split())
 
 arr = []
