@@ -20,7 +20,7 @@ for _ in range(k):
 
 remove_rock_comb = list(combinations(rocks, m))
 
-def bfs(sx, sy):
+def bfs(sx, sy, comb):
     queue = deque([(sx, sy)])
     visited = [[0] * n for _ in range(n)]
     dx = [-1, 1, 0, 0]
@@ -30,20 +30,19 @@ def bfs(sx, sy):
         x, y = queue.popleft()
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n and arr[nx][ny] == 0 and visited[nx][ny] == 0:
-                visited[nx][ny] = 1
-                queue.append((nx, ny))
-                count += 1
+            if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0:
+                if arr[nx][ny] == 0 or (nx, ny) in comb:
+                    visited[nx][ny] = 1
+                    queue.append((nx, ny))
+                    count += 1
 
     return count 
 
 answer = 0 # max
 for comb in remove_rock_comb:
-    for x, y in comb:
-        arr[x][y] = 0 
+
     for sx, sy in start_pos:
-        answer = max(bfs(sx, sy), answer)
-    for x, y in comb:
-        arr[x][y] = 1
+        answer = max(bfs(sx, sy, list(comb)), answer)
+
 
 print(answer)
