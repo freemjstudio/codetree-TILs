@@ -28,7 +28,7 @@ def bfs(sx, sy, comb):
     queue = deque([])
     queue.append((sx, sy))
     visited[sx][sy] = 1
-    count = 0  # enqueue 할 떄 count
+    count = 1  # enqueue 할 떄 count
     while queue:
         x, y = queue.popleft()
         for i in range(4):
