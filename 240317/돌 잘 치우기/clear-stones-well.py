@@ -24,11 +24,11 @@ dy = [0, 0, -1, 1]
 
 
 def bfs(sx, sy, comb):
-    visited = [[0] * (n+1) for _ in range(n+1)]
+    visited = [[0] * n for _ in range(n)]
     queue = deque([])
     queue.append((sx, sy))
     
-    visited[sx][sy] = 1
+    # visited[sx][sy] = 1
     count = 0  # enqueue 할 떄 count
     while queue:
         x, y = queue.popleft()
