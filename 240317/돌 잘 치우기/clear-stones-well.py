@@ -19,7 +19,6 @@ for _ in range(k):
     r, c = map(int, input().split())
     start_pos.append((r, c))
 
-remove_rock_comb = list(combinations(rocks, m))
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
@@ -41,7 +40,7 @@ def bfs(sx, sy, comb):
 
     return count
 
-
+remove_rock_comb = list(combinations(rocks, m))
 answer = 0  # max
 for comb in remove_rock_comb:
     for sx, sy in start_pos:
