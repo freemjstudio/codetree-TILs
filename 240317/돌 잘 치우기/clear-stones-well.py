@@ -39,9 +39,15 @@ selected_rocks = [] # 제거할 위치 돌 m 개 선택
 def simulate():
     for x, y in selected_rocks:
         arr[x][y] = 0
+    
+    for i in range(n):
+        for j in range(n):
+            visited[i][j] = False 
+
     for sx, sy in start_pos:
         queue.append((sx, sy))
         visited[sx][sy] = True 
+    
     bfs()
     # 다시 복구하기 
     for x, y in selected_rocks:
