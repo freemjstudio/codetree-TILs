@@ -17,7 +17,7 @@ for i in range(n):
 start_pos = []
 for _ in range(k):
     r, c = map(int, input().split())
-    start_pos.append((r, c))
+    start_pos.append((r-1, c-1))
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
@@ -27,8 +27,7 @@ def bfs(sx, sy, comb):
     visited = [[0] * n for _ in range(n)]
     queue = deque([])
     queue.append((sx, sy))
-    
-    # visited[sx][sy] = 1
+    visited[sx][sy] = 1
     count = 0  # enqueue 할 떄 count
     while queue:
         x, y = queue.popleft()
