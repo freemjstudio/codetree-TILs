@@ -1,4 +1,3 @@
-from itertools import combinations
 from collections import deque
 import sys
 
@@ -22,29 +21,52 @@ for _ in range(k):
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-
-def bfs(sx, sy, comb):
-    visited = [[0] * n for _ in range(n)]
-    queue = deque([])
-    queue.append((sx, sy))
-    visited[sx][sy] = 1
-    count = 1  # enqueue 할 떄 count
+answer = 0 
+visited = [[False] * n for _ in range(n)]
+def bfs():
     while queue:
         x, y = queue.popleft()
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] == 0:
-                if arr[nx][ny] == 0 or (nx, ny) in comb:
-                    visited[nx][ny] = 1
+
+            if 0 <= nx < n and 0 <= ny < n:
+                if arr[nx][ny] == 0 and not visited[nx][ny]:
                     queue.append((nx, ny))
-                    count += 1
+                    visited[nx][ny] = True 
 
-    return count
-
-remove_rock_comb = list(combinations(rocks, m))
-answer = 0  # max
-for comb in remove_rock_comb:
+queue = deque()
+selected_rocks = [] # 제거할 위치 돌 m 개 선택 
+def simulate():
+    for x, y in selected_rocks:
+        arr[x][y] = 0
     for sx, sy in start_pos:
-        answer = max(bfs(sx, sy, list(comb)), answer)
+        queue.append((sx, sy))
+        visited[sx][sy] = True 
+    bfs()
+    # 다시 복구하기 
+    for x, y in selected_rocks:
+        arr[x][y] = 1
+    count = 0 
+    for i in range(n):
+        for j in range(n):
+            if visited[i][j]:
+                count += 1
+    return count 
 
+
+# backtracking
+def find_max(idx, cnt):
+    global answer 
+
+    if idx == len(rocks):
+        if cnt == m:
+            answer = max(answer, simulate())
+        return 
+    
+    selected_rocks.append(rocks[idx])
+    find_max(idx+1, cnt+1)
+    selected_rocks.pop()
+    find_max(idx+1, cnt)
+
+find_max(0, 0)
 print(answer)
