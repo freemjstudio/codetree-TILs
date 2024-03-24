@@ -1,15 +1,16 @@
+from collections import defaultdict 
 n, k = map(int, input().split())
 arr = list(map(int, input().split()))
 
-answer = 0 
-numbers = {}
+numbers = defaultdict(list)
 for idx, elem in enumerate(arr):
-    numbers[elem] = idx # 위치 
+    numbers[elem].append(idx) # 위치 
 
-for i in range(len(arr)): 
-    tmp = (k - arr[i])
+answer = 0 
+
+for key, value in numbers.items():
+    tmp = (k - key)
     if tmp in numbers:
-        if i != numbers[tmp]:
-            answer += 1
+        answer += (len(value) * len(numbers[tmp]))
 
 print(answer//2)
