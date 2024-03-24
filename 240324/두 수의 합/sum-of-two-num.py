@@ -11,6 +11,6 @@ answer = 0
 for key, value in numbers.items():
     tmp = (k - key)
     if tmp in numbers:
-        answer += (len(value) * len(numbers[tmp]))
+        answer += len(numbers[tmp])
 
-print(answer//2)
+print(answer)
