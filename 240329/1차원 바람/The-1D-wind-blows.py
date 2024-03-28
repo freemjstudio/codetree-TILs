@@ -47,8 +47,10 @@ def simulate(start_row, start_dir):
             break 
 
 def print_result():
-    for i in range(n):
-        print(*arr[i])
+    for row in range(n):
+        for col in range(m):
+            print(arr[row][col], end=" ")
+        print()
 
 for _ in range(q):
     row, wind_dir = input().split()
