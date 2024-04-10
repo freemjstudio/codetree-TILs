@@ -63,7 +63,7 @@ def simulate(idx, d):
 
             is_moved[i] = True 
             queue.append(i) # queue 를 이용하여 연쇄적으로 처리하기 
-        # damage[idx] = 0 
+        damage[idx] = 0 
         return True 
 
 
