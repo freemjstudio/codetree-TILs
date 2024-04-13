@@ -20,44 +20,48 @@ ty = [-1, 1, 1, -1]
 
 # 성장 
 def grow():
-    global tree_pos
-    temp = [[0] * n for _ in range(n)]
-    for x, y in tree_pos:
-        tree_cnt = 0 
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n:
-                if grid[nx][ny] > 0:
-                    tree_cnt += 1
-        temp[x][y] = tree_cnt
-    # grow 적용 
-    for x in range(n):
-        for y in range(n):
-            grid[x][y] += temp[x][y]                    
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] <= 0:
+                continue 
+            tree_cnt = 0
+            for t in range(4):
+                nx, ny = i + dx[t], j + dy[t]
+                if 0 <= nx < n and 0 <= ny < n:
+                    if grid[nx][ny] > 0:
+                        tree_cnt += 1
+            grid[i][j] += tree_cnt
 
 # 번식 - 번식 가능한 칸의 개수 만큼 번식됨 
 def spread(): 
     global tree_pos
     temp = [[0] * n for _ in range(n)]
-    for x, y in tree_pos:
-        vacant_cnt = 0 
-        vacant_pos = []
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < n:
-                if grid[nx][ny] == 0 and herb[nx][ny] == 0:
-                    vacant_cnt += 1
-                    vacant_pos.append((nx, ny)) # 번식할 수 있는 칸의 위치 
-        
-        for r, c in vacant_pos:
-            temp[r][c] += grid[x][y] // vacant_cnt
 
-    tree_pos = [] 
-    for x in range(n):
-        for y in range(n):
-            if grid[x][y] > 0 or temp[x][y] > 0:
-                tree_pos.append((x, y))
-                grid[x][y] += temp[x][y]
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] <= 0: 
+                continue 
+            # 번식 가능한 칸 
+            cnt = 0 
+            for t in range(4):
+                nx, ny = i + dx[t], j + dy[t]
+                if 0 <= nx < n and 0 <= ny < n: 
+                    if herb[nx][ny]:
+                        continue
+                    if grid[nx][ny] == 0:
+                        cnt += 1
+            # 번식 진행 
+            for t in range(4):
+                nx, ny = i + dx[t], j + dy[t]
+                if 0 <= nx < n and 0 <= ny < n:
+                    if herb[nx][ny]:
+                        continue
+                    if grid[nx][ny] == 0:
+                        temp[nx][ny] += grid[nx][ny] // cnt 
+
+    for i in range(n):
+        for j in range(n):
+            grid[i][j] += temp[i][j]
 
 
 # 제초제 위치 구하기 
