@@ -63,7 +63,7 @@ def spread():
 def get_kill_pos():
     global answer 
     max_kill = 0 
-    r, c = -1, -1 # max kill 값의 위치를 구하기 (제초제 뿌릴 위치)
+    r, c = 0, 0 # max kill 값의 위치를 구하기 (제초제 뿌릴 위치)
 
     for i in range(n):
         for j in range(n): 
@@ -75,7 +75,9 @@ def get_kill_pos():
                 for _ in range(k): # 대각선 방향 K 까지 영향줌 
                     nx += tx[t]
                     ny += ty[t]
-                    if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] != -1: 
+                    if 0 <= nx < n and 0 <= ny < n: 
+                        if grid[nx][ny] < 0:
+                            break 
                         kill_count += grid[nx][ny]
                     else: # 범위 벗어나면 확산 중단  
                         break 
