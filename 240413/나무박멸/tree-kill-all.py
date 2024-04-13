@@ -2,7 +2,7 @@ n, m, k, C = map(int, input().split())
 answer = 0 
 grid = []
 tree_pos = []
-kill_pos = dict()
+herb = [[0] * n for _ in range(n)] # 제초제 위치 
 
 for i in range(n):
     line = list(map(int, input().split()))
@@ -45,7 +45,7 @@ def spread():
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
             if 0 <= nx < n and 0 <= ny < n:
-                if grid[nx][ny] == 0:
+                if grid[nx][ny] == 0 and herb[nx][ny] == 0:
                     vacant_cnt += 1
                     vacant_pos.append((nx, ny)) # 번식할 수 있는 칸의 위치 
         
@@ -62,8 +62,7 @@ def spread():
 
 # 제초제 위치 구하기 
 def get_kill_pos():
-    global kill_pos
-
+    global answer 
     max_kill = 0 
     r, c = -1, -1 # max kill 값의 위치를 구하기 (제초제 뿌릴 위치)
     tree_pos.sort() # 행, 열 순으로 정렬하기 
@@ -82,53 +81,38 @@ def get_kill_pos():
         if max_kill < kill_count:
             max_kill = kill_count
             r, c = x, y
-    kill_pos[(r, c)] = C
+    
+    answer += max_kill
 
-# 박멸 진행하기 -> 아직 유효한 제초제 위치에 대해서만 작업하기 
-def kill_tree():
-    global answer, kill_pos
+    # 제초제 뿌리기 
+    if grid[r][c] > 0:
+        grid[r][c] = 0 
+        herb[r][c] = C 
 
-    update_kill_pos = dict() 
-
-    for key, value in kill_pos.items():
-        r, c = key 
-        year = value 
-        if year <= 0:
-            if grid[r][c] == -2:
-                grid[r][c] = 0 # 제초제 삭제 
-            continue 
-
-        if grid[r][c] >= 0:
-            answer += grid[r][c]
-            grid[r][c] == -2 # 제초제 처리 
-            year -= 1
-        # kill 진행 
         for t in range(4):
             nx, ny = r, c 
             for _ in range(k):
-                nx += tx[t]
-                ny += ty[t]
+                nx, ny = nx + tx[t], ny + ty[t]
                 if 0 <= nx < n and 0 <= ny < n:
-
-                    answer += grid[nx][ny]
-                    if grid[nx][ny] > 0: # 나무가 있는 경우 
-                        grid[nx][ny] = -2
-                    elif grid[nx][ny] == -1:
+                    if grid[nx][ny] < 0:
+                        break # 벽인 경우 
+                    if grid[nx][ny] == 0: # 나무 없는 경우 
+                        herb[nx][ny] = C
                         break 
-                    elif grid[nx][ny] == 0: # 나무가 아예 없는 경우 
-                        grid[nx][ny] = -2 
-                        break 
-                else: 
-                    break 
-        if year > 0:
-            update_kill_pos[(r, c)] = year 
+                    grid[nx][ny] = 0 
+                    herb[nx][ny] = C 
 
-    kill_pos = update_kill_pos
+
+def delete_herb():
+    for i in range(n):
+        for j in range(n):
+            if herb[i][j] > 0:
+                herb[i][j] -= 1
 
 for _ in range(m):
     grow()
     spread()
     get_kill_pos()
-    kill_tree()
+    delete_herb() # 제초제 1년 감소 
 
-print(answer-1)
+print(answer)
