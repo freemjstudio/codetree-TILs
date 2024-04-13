@@ -131,4 +131,4 @@ for _ in range(m):
     get_kill_pos()
     kill_tree()
 
-print(answer)
+print(answer-1)
