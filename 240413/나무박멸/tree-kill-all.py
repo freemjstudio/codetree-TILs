@@ -1,15 +1,10 @@
 n, m, k, C = map(int, input().split())
 answer = 0 
 grid = []
-tree_pos = []
 herb = [[0] * n for _ in range(n)] # 제초제 위치 
 
 for i in range(n):
-    line = list(map(int, input().split()))
-    for j in range(n):
-        if line[j] > 0:
-            tree_pos.append((i, j))
-    grid.append(line)
+    grid.append(list(map(int, input().split())))
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
@@ -69,22 +64,24 @@ def get_kill_pos():
     global answer 
     max_kill = 0 
     r, c = -1, -1 # max kill 값의 위치를 구하기 (제초제 뿌릴 위치)
-    tree_pos.sort() # 행, 열 순으로 정렬하기 
-    for x, y in tree_pos:
-        kill_count = grid[x][y] # 자기 자신의 위치 나무 박멸  
 
-        for t in range(4):
-            nx, ny = x, y 
-            for _ in range(k): # 대각선 방향 K 까지 영향줌 
-                nx += tx[t]
-                ny += ty[t]
-                if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] != -1: 
-                    kill_count += grid[nx][ny]
-                else: # 범위 벗어나면 확산 중단  
-                    break 
-        if max_kill < kill_count:
-            max_kill = kill_count
-            r, c = x, y
+    for i in range(n):
+        for j in range(n): 
+            if grid[i][j] <= 0: 
+                continue 
+            kill_count = grid[i][j]
+            for t in range(4):
+                nx, ny = i, j 
+                for _ in range(k): # 대각선 방향 K 까지 영향줌 
+                    nx += tx[t]
+                    ny += ty[t]
+                    if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] != -1: 
+                        kill_count += grid[nx][ny]
+                    else: # 범위 벗어나면 확산 중단  
+                        break 
+            if max_kill < kill_count:
+                max_kill = kill_count
+                r, c = i, j
     
     answer += max_kill
 
