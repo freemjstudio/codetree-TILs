@@ -2,7 +2,8 @@ n, m, k, C = map(int, input().split())
 answer = 0 
 grid = []
 tree_pos = []
-kill_pos = []
+kill_pos = dict()
+
 for i in range(n):
     line = list(map(int, input().split()))
     for j in range(n):
@@ -81,35 +82,46 @@ def get_kill_pos():
         if max_kill < kill_count:
             max_kill = kill_count
             r, c = x, y
-    kill_pos.append((r, c, C))
+    kill_pos[(r, c)] = C
 
 # 박멸 진행하기 -> 아직 유효한 제초제 위치에 대해서만 작업하기 
 def kill_tree():
     global answer, kill_pos
 
-    update_kill_pos = []
-    for kp in kill_pos:
-        r, c, C = kp 
-        if C <= 0:
-            grid[r][c] = 0 # 제초제 삭제 
+    update_kill_pos = dict() 
+
+    for key, value in kill_pos.items():
+        r, c = key 
+        year = value 
+        if year <= 0:
+            if grid[r][c] == -2:
+                grid[r][c] = 0 # 제초제 삭제 
             continue 
-        if grid[r][c] > 0:
+
+        if grid[r][c] >= 0:
             answer += grid[r][c]
             grid[r][c] == -2 # 제초제 처리 
-            C -= 1
+            year -= 1
         # kill 진행 
         for t in range(4):
             nx, ny = r, c 
             for _ in range(k):
                 nx += tx[t]
                 ny += ty[t]
-                if 0 <= nx < n and 0 <= ny < n and grid[nx][ny] != -1: 
+                if 0 <= nx < n and 0 <= ny < n:
+
                     answer += grid[nx][ny]
-                    grid[nx][ny] = 0 
+                    if grid[nx][ny] > 0: # 나무가 있는 경우 
+                        grid[nx][ny] = -2
+                    elif grid[nx][ny] == -1:
+                        break 
+                    elif grid[nx][ny] == 0: # 나무가 아예 없는 경우 
+                        grid[nx][ny] = -2 
+                        break 
                 else: 
                     break 
-        
-        update_kill_pos.append((r, c, C))
+        if year > 0:
+            update_kill_pos[(r, c)] = year 
 
     kill_pos = update_kill_pos
 
