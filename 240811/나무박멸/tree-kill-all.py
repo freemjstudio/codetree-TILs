@@ -157,9 +157,8 @@ for year in range(m):
     # print("BREEDING")
     # print_arr(arr)
     x, y = find_most_kill_pos()
-
     tree, new_killer_pos = kill_tree(x, y)  # 박멸한 나무 수
-    if tree >= 0:
+    if x != -1 and y != -1:
         answer += tree
     # 새롭게 제초제를 뿌린 공간은 남은 년수를 remove_killer에서 빼면 안됨 !
     remove_killer(new_killer_pos)
