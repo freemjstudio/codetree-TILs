@@ -5,8 +5,7 @@ arr = []
 killer_arr = [[0] * n for _ in range(n)]  # 제초제 위치와 남은 년수 기록하기, 벽의 위치 정보는 필요함
 
 for i in range(n):
-    data = list(map(int, input().split())
-    arr.append(data)
+    arr.append(list(map(int, input().split())))
 
 # 상하좌우
 dx = [-1, 1, 0, 0]
@@ -36,19 +35,22 @@ def growth():
         arr[x][y] += amount
 
 
-def breeding(tree_pos):
+def breeding():
     breeding_pos = []  # 번식이 일어날 위치 기록
-    for x, y in tree_pos:
-        cnt = 0  # 빈칸 세기
-        new_pos = []
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] == 0:  # 번식 가능한 칸인지 확인하기
-                cnt += 1
-                new_pos.append((nx, ny))
-        if cnt > 0:
-            for nx, ny in new_pos:
-                breeding_pos.append((nx, ny, (arr[x][y] // cnt)))
+    for x in range(n):
+        for y in range(n):
+            if arr[x][y] > 0:
+                new_pos = []
+                cnt = 0
+                for i in range(4):
+                    nx, ny = x + dx[i], y + dy[i]
+                    if (0 <= nx < n and 0 <= ny < n):
+                        if arr[nx][ny] == 0:
+                            cnt += 1
+                            new_pos.append((nx, ny))
+                if cnt > 0:
+                    for nx, ny in new_pos:
+                        breeding_pos.append((nx, ny, (arr[x][y] // cnt)))
 
     # update arr
     for x, y, amount in breeding_pos:
@@ -139,7 +141,7 @@ for year in range(m):
     growth()  # 나무 성장
     # print("GROWTH")
     # print_arr(arr)
-    breeding(tree_pos)  # 나무 번식 소리
+    breeding()  # 나무 번식 소리
     # print("BREEDING")
     # print_arr(arr)
     x, y = find_most_kill_pos()
