@@ -15,7 +15,6 @@ dy = [0, 0, -1, 1]
 dx2 = [-1, 1, -1, 1]
 dy2 = [-1, -1, 1, 1]
 
-
 def growth():
     grow_pos = []  # 성장이 일어날 위치 기록
 
@@ -26,8 +25,9 @@ def growth():
                 cnt = 0
                 for i in range(4):
                     nx, ny = x + dx[i], y + dy[i]
-                    if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] > 0:
-                        cnt += 1
+                    if (0 <= nx < n and 0 <= ny < n):
+                        if arr[nx][ny] > 0:
+                            cnt += 1
                 if cnt > 0:
                     grow_pos.append((x, y, cnt))
     # update arr
@@ -36,127 +36,110 @@ def growth():
 
 
 def breeding():
-    breeding_pos = []  # 번식이 일어날 위치 기록
+    breeding_arr = [[0]*n for _ in range(n)]
     for x in range(n):
         for y in range(n):
             if arr[x][y] > 0:
                 new_pos = []
-                cnt = 0
                 for i in range(4):
                     nx, ny = x + dx[i], y + dy[i]
                     if (0 <= nx < n and 0 <= ny < n):
-                        if arr[nx][ny] == 0:
-                            cnt += 1
+                        if arr[nx][ny] == 0 and killer_arr[nx][ny] == 0:
                             new_pos.append((nx, ny))
-                if cnt > 0:
-                    for nx, ny in new_pos:
-                        breeding_pos.append((nx, ny, (arr[x][y] // cnt)))
-
+                if not new_pos:
+                    continue 
+                
+                amount = (arr[x][y] // len(new_pos))
+                for nx, ny in new_pos:
+                    breeding_arr[nx][ny] += amount 
     # update arr
-    for x, y, amount in breeding_pos:
-        arr[x][y] += amount
+    for i in range(n):
+        for j in range(n):
+            arr[i][j] += breeding_arr[i][j]
 
+def spread(x, y):
+    killer_arr[x][y] = c+1
+    if arr[x][y] == 0: # 빈칸의 경우 나무가 없으므로 번식할 수 없음
+        return
 
-# 가장 많이 박멸할 수 있는 칸 찾기
-def find_most_kill_pos():
-    max_kill = 0  #
-    max_x, max_y = -1, -1  # 가장 많이 박멸할 수 있는 칸
-    # 같다면 행이 작은 순서대로, 열이 작은 순서대로
-    # 나무가 있는 칸이어야 함
+    arr[x][y] = 0 # 나무 박멸
+    for i in range(4):
+        for j in range(1, k+1):
+            nx, ny = x + dx2[i] * j, y + dy2[i] * j
+            if not (0 <= nx < n and 0 <= ny < n):
+                break
+            if arr[nx][ny] == 0 or arr[nx][ny] == -1:
+                killer_arr[nx][ny] = c + 1
+                break
+            arr[nx][ny] = 0 # 나무 박멸
+            killer_arr[nx][ny] = c + 1
+
+def spread_test(x, y):
+    result = arr[x][y] # x, y 기준으로 제초제 뿌렸을 때 결과
+    if arr[x][y] == 0: # 빈칸의 경우 Return 0
+        return 0
+    for i in range(4):
+        for j in range(1, k+1):
+            nx, ny = x + dx2[i] * j, y + dy2[i] * j
+            if not (0 <= nx < n and 0 <= ny < n):
+                break
+            if arr[nx][ny] == 0 or arr[nx][ny] == -1:
+                break
+            result += arr[nx][ny]
+    return result
+
+def execute_spread():
+    global answer
+    max_kill, max_x, max_y = 0, 0, 0
     for x in range(n):
         for y in range(n):
-            if arr[x][y] > 0:  # 나무가 있는 칸
-                temp_kill_cnt = arr[x][y]
-                # 방향은 4가지 대각선
-                for i in range(4):
-                    nx, ny = x, y
-                    for j in range(k):  # k 만큼 이동 가능
-                        nx, ny = nx + dx2[i], ny + dy2[i]
-                        if (0 <= nx < n and 0 <= ny < n):
-                            if arr[nx][ny] > 0:  # 나무가 있는 칸
-                                temp_kill_cnt += arr[nx][ny]
-                            if arr[nx][ny] == -1:
-                                break
-                    # print("temp kill cnt", temp_kill_cnt)
-                if max_kill < temp_kill_cnt:
-                    max_kill = temp_kill_cnt
-                    max_x, max_y = x, y
-                elif max_kill == temp_kill_cnt:
-                    if max_x > x:
-                        max_x, max_y = x, y
-                    elif max_x == x and max_y > y:
-                        max_x, max_y = x, y
-    return max_x, max_y
+            if arr[x][y] == -1: # 벽
+                continue
+            tmp = spread_test(x, y)
+            if tmp > max_kill:
+                max_kill, max_x, max_y = tmp, x, y # 갱신하기
 
-
-# 나무 박멸하기
-def kill_tree(x, y):
-    new_killer_pos = []  # 해당 년도에 새롭게 제초제를 뿌린 위치
-
-    # x, y = find_most_kill_pos()
-    kill_cnt = arr[x][y]
-    killer_arr[x][y] = c
-    arr[x][y] = -2
-    new_killer_pos.append((x, y))
-    # 박멸 실행하기
-    for i in range(4):
-        nx, ny = x, y
-        for j in range(k):
-            nx, ny = nx + dx2[i], ny + dy2[i]
-            if (0 <= nx < n and 0 <= ny < n):
-                if arr[nx][ny] == -1:  # 벽을 만나는 경우
-                    break 
-                    # 박멸한 나무 수 기록하기
-                if arr[nx][ny] == 0:
-                    killer_arr[nx][ny] = c
-                    arr[nx][ny] = -2
-                    break 
-
-                if arr[nx][ny] > 0:
-                    kill_cnt += arr[nx][ny]
-                    # 제초제 뿌렸음을 표시하기
-                    arr[nx][ny] = -2
-                    killer_arr[nx][ny] = c
-                    # 제초제 유효 기간
-                    new_killer_pos.append((nx, ny))
-                if arr[nx][ny] == -2:
-                    killer_arr[nx][ny] = c
-                    new_killer_pos.append((nx, ny))
-
-    return kill_cnt, new_killer_pos
-
+    if not max_kill: # 0
+        return False
+    spread(max_x, max_y)
+    answer += max_kill
+    return True
 
 # 제초제 1년 유효기간 반영 및 제초제 없애기
-def remove_killer(new_killer_pos):
+def remove_killer():
     for x in range(n):
         for y in range(n):
-            if killer_arr[x][y] > 0 and (x, y) not in new_killer_pos:
-                killer_arr[x][y] -= 1
-                if killer_arr[x][y] == 0 and arr[x][y] == -2:
-                    arr[x][y] = 0  # 제초제 효과 없어짐
-
+            killer_arr[x][y] = max(0, killer_arr[x][y] - 1)
 
 def print_arr(a):
     for i in range(n):
         print(*a[i])
     print()
 
-
 for year in range(m):
     growth()  # 나무 성장
     # print("GROWTH")
     # print_arr(arr)
     breeding()  # 나무 번식 소리
+    # print("KILLER")
+    # print_arr(killer_arr)
     # print("BREEDING")
     # print_arr(arr)
-    x, y = find_most_kill_pos()
-    if x >= 0 and y >= 0:
-        tree, new_killer_pos = kill_tree(x, y)  # 박멸한 나무 수
-        answer += tree
-    else:
+    result = execute_spread()
+    if not result: # 더이상 제초제 뿌릴 수 없는 경우
         break
     # 새롭게 제초제를 뿌린 공간은 남은 년수를 remove_killer에서 빼면 안됨 !
-
-    remove_killer(new_killer_pos)
+    remove_killer()
 
 print(answer)
+
+"""
+5 2 2 1
+0 0 0 0 0
+0 30 23 0 0
+0 0 -1 0 0
+0 0 17 46 77
+0 0 0 12 0
+
+330
+"""
