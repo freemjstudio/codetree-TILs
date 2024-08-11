@@ -47,17 +47,19 @@ def breeding(tree_pos):
     breeding_pos = [] # 번식이 일어날 위치 기록
     for x, y in tree_pos:
         cnt = 0 # 빈칸 세기
+        new_pos = []
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] == 0:
+            if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] == 0: # 번식 가능한 칸인지 확인하기 
                 cnt += 1
-        breeding_pos.append((x, y, arr[x][y]//cnt))
+                new_pos.append((nx, ny))
+        if cnt > 0:
+            for nx, ny in new_pos:
+                breeding_pos.append((nx, ny, (arr[x][y]//cnt)))
+
     # Update arr
     for x, y, amount in breeding_pos:
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] == 0:
-                arr[nx][ny] += amount
+        arr[x][y] += amount
 
 # 가장 많이 박멸할 수 있는 칸 찾기
 def find_most_kill_pos():
@@ -118,23 +120,24 @@ def remove_killer():
         for y in range(n):
             if killer_arr[x][y] > 0:
                 killer_arr[x][y] -= 1
-            if killer_arr[x][y] == 0:
-                arr[x][y] = 0 # 제초제 효과 없어짐 
+                if killer_arr[x][y] == 0:
+                    arr[x][y] = 0 # 제초제 효과 없어짐 
 
 def print_arr():
     for i in range(n):
         print(*arr[i])
 
 for year in range(m):
-    if year >= 1: # c+1 년쨰에 제초제가 사라짐 
+    # c+1 년쨰에 제초제가 사라짐 
+    if year >= 1:
         remove_killer()
 
     tree_pos = check_tree_pos() # 원래 나무 위치
     growth() # 나무 성장
+    # print_arr()
+    # print()
     breeding(tree_pos) # 나무 번식 소리
     # print_arr()
     answer += kill_tree() # 박멸한 나무 수
-    
-    
 
 print(answer)
