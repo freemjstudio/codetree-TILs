@@ -5,10 +5,7 @@ arr = []
 killer_arr = [[0] * n for _ in range(n)]  # 제초제 위치와 남은 년수 기록하기, 벽의 위치 정보는 필요함
 
 for i in range(n):
-    data = list(map(int, input().split()))
-    for j in range(n):
-        if data[j] == -1:
-            killer_arr[i][j] == -1  # 벽 표시하기
+    data = list(map(int, input().split())
     arr.append(data)
 
 # 상하좌우
@@ -18,16 +15,6 @@ dy = [0, 0, -1, 1]
 # 대각선 탐색
 dx2 = [-1, 1, -1, 1]
 dy2 = [-1, -1, 1, 1]
-
-
-# 성장, 번식 시작 전에 맨 처음에 있던 나무 위치 세기
-def check_tree_pos():
-    tree_pos = []
-    for i in range(n):
-        for j in range(n):
-            if arr[i][j] > 0:
-                tree_pos.append((i, j))
-    return tree_pos
 
 
 def growth():
@@ -149,7 +136,6 @@ def print_arr(a):
 
 
 for year in range(m):
-    tree_pos = check_tree_pos()  # 원래 나무 위치
     growth()  # 나무 성장
     # print("GROWTH")
     # print_arr(arr)
@@ -157,10 +143,13 @@ for year in range(m):
     # print("BREEDING")
     # print_arr(arr)
     x, y = find_most_kill_pos()
-    tree, new_killer_pos = kill_tree(x, y)  # 박멸한 나무 수
-    if x != -1 and y != -1:
+    if x >= 0 and y >= 0:
+        tree, new_killer_pos = kill_tree(x, y)  # 박멸한 나무 수
         answer += tree
+    else:
+        break 
     # 새롭게 제초제를 뿌린 공간은 남은 년수를 remove_killer에서 빼면 안됨 !
+
     remove_killer(new_killer_pos)
 
 print(answer)
