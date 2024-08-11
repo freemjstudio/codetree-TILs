@@ -4,8 +4,11 @@ answer = 0 # m 년 동안 총 박멸할 나무 그루 수
 arr = []
 killer_arr = [[0] * n for _ in range(n)] # 제초제 위치와 남은 년수 기록하기, 벽의 위치 정보는 필요함
 
-for _ in range(n):
+for i in range(n):
     data = list(map(int, input().split()))
+    for j in range(n):
+        if data[j] == -1:
+            killer_arr[i][j] == -1 # 벽 표시하기 
     arr.append(data)
 
 # 상하좌우
@@ -57,7 +60,7 @@ def breeding(tree_pos):
             for nx, ny in new_pos:
                 breeding_pos.append((nx, ny, (arr[x][y]//cnt)))
 
-    # Update arr
+    # update arr
     for x, y, amount in breeding_pos:
         arr[x][y] += amount
 
@@ -66,7 +69,6 @@ def find_most_kill_pos():
     max_kill = 0 #
     max_x, max_y = -1, -1 # 가장 많이 박멸할 수 있는 칸
     # 같다면 행이 작은 순서대로, 열이 작은 순서대로
-
     # 나무가 있는 칸이어야 함
     for x in range(n):
         for y in range(n):
@@ -80,7 +82,7 @@ def find_most_kill_pos():
                         if (0 <= nx < n and 0 <= ny < n):
                             if arr[nx][ny] > 0: #  나무가 있는 칸
                                 temp_kill_cnt += arr[nx][ny]
-                            elif arr[nx][ny] == -1:
+                            if arr[nx][ny] == -1:
                                 break
                     # print("temp kill cnt", temp_kill_cnt)
                 if max_kill < temp_kill_cnt:
@@ -91,26 +93,32 @@ def find_most_kill_pos():
                         max_x, max_y = x, y
                     elif max_x == x and max_y > y:
                         max_x, max_y = x, y
-                # print("max_kill:", max_kill)
-
     return max_x, max_y
 # 나무 박멸하기
 def kill_tree():
     x, y = find_most_kill_pos()
     kill_cnt = arr[x][y]
-   
+
+    killer_arr[x][y] = c 
+    arr[x][y] = -2
     # 박멸 실행하기
     for i in range(4):
         nx, ny = x, y
         for j in range(k):
             nx, ny = nx + dx2[i], ny + dy2[i]
-            if (0 <= nx < n and 0 <= ny < n) and arr[nx][ny] > 0:
+            if (0 <= nx < n and 0 <= ny < n):
+                if arr[nx][ny] == -1: # 벽을 만나는 경우 
+                    break  
                 # 박멸한 나무 수 기록하기
-                kill_cnt += arr[nx][ny]
-                # 제초제 뿌렸음을 표시하기
-                arr[nx][ny] = -2
-                # 제초제 유효 기간
+                if arr[nx][ny] > 0:
+                    kill_cnt += arr[nx][ny]
+                    # 제초제 뿌렸음을 표시하기
+                    arr[nx][ny] = -2
+                    # 제초제 유효 기간
+
                 killer_arr[nx][ny] = c
+            
+    
 
     return kill_cnt
 
@@ -120,24 +128,24 @@ def remove_killer():
         for y in range(n):
             if killer_arr[x][y] > 0:
                 killer_arr[x][y] -= 1
-                if killer_arr[x][y] == 0:
+                if killer_arr[x][y] == 0 and arr[x][y] == -2:
                     arr[x][y] = 0 # 제초제 효과 없어짐 
 
-def print_arr():
+def print_arr(a):
     for i in range(n):
-        print(*arr[i])
+        print(*a[i])
 
 for year in range(m):
     # c+1 년쨰에 제초제가 사라짐 
-    if year >= 1:
-        remove_killer()
+    
 
     tree_pos = check_tree_pos() # 원래 나무 위치
     growth() # 나무 성장
-    # print_arr()
-    # print()
     breeding(tree_pos) # 나무 번식 소리
-    # print_arr()
-    answer += kill_tree() # 박멸한 나무 수
 
+    tree = kill_tree() # 박멸한 나무 수
+
+    answer += tree 
+    if year >= 1:
+        remove_killer()
 print(answer)
