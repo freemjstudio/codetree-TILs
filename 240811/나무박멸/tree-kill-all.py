@@ -34,7 +34,6 @@ def growth():
     for x, y, amount in grow_pos:
         arr[x][y] += amount
 
-
 def breeding():
     breeding_pos = []  # 번식이 일어날 위치 기록
     for x in range(n):
@@ -51,11 +50,9 @@ def breeding():
                 if cnt > 0:
                     for nx, ny in new_pos:
                         breeding_pos.append((nx, ny, (arr[x][y] // cnt)))
-
     # update arr
     for x, y, amount in breeding_pos:
         arr[x][y] += amount
-
 
 # 가장 많이 박멸할 수 있는 칸 찾기
 def find_most_kill_pos():
@@ -95,7 +92,7 @@ def kill_tree(x, y):
 
     # x, y = find_most_kill_pos()
     kill_cnt = arr[x][y]
-    killer_arr[x][y] = c
+    killer_arr[x][y] = c+1
     arr[x][y] = -2
     new_killer_pos.append((x, y))
     # 박멸 실행하기
@@ -111,11 +108,11 @@ def kill_tree(x, y):
                     kill_cnt += arr[nx][ny]
                     # 제초제 뿌렸음을 표시하기
                     arr[nx][ny] = -2
-                    killer_arr[nx][ny] = c
+                    killer_arr[nx][ny] = c+1
                     # 제초제 유효 기간
                     new_killer_pos.append((nx, ny))
                 if arr[nx][ny] == -2:
-                    killer_arr[nx][ny] = c
+                    killer_arr[nx][ny] = c+1
                     new_killer_pos.append((nx, ny))
 
     return kill_cnt, new_killer_pos
